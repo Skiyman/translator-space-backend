@@ -5,7 +5,6 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from starlette import status
 
-from app.config.auth.current_user import get_current_user
 from app.config.auth.token_schema import Token
 from app.config.settings.project import project_settings
 from app.enums.role import RoleTypes
@@ -52,10 +51,3 @@ async def login(
         data={"sub": str(user.email)}, expires_delta=access_token_expires
     )
     return Token(access_token=access_token, token_type="bearer")
-
-
-@router.get("/users/me/")
-async def get_me(
-        current_user: Annotated[UserRole, Depends(get_current_user)],
-) -> UserRole:
-    return current_user
